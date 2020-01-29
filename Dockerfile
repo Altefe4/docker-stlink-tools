@@ -1,4 +1,4 @@
-FROM debian:9
+FROM debian:10
 
 RUN dpkg --add-architecture i386 \
   && DEBIAN_FRONTEND=noninteractive apt-get update -y -q \
