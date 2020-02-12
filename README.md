@@ -61,5 +61,5 @@ Feel free to fork, PRs welcome.
 
 ## License
 
-by @aschmidt75. Apache 2. See LICENSE.
+Apache 2. See LICENSE.
 

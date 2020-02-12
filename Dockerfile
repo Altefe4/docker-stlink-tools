@@ -1,15 +1,26 @@
-FROM debian:10
+FROM python:3.7-alpine
+MAINTAINER Rodrigo Pérez Antel I+D <rgperez@antel.com.uy>
 
-RUN dpkg --add-architecture i386 \
-  && DEBIAN_FRONTEND=noninteractive apt-get update -y -q \
-  && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -q \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
-    python python-pip \
-    libc6:i386 libncurses5:i386 libstdc++6:i386 \
-    binutils-arm-none-eabi gcc-arm-none-eabi crossbuild-essential-armhf build-essential git mercurial \
-  && pip install mbed-cli
+RUN apk add --no-cache git \
+	mercurial \
+	gcc \
+	musl-dev \
+	libffi-dev \
+	openssl-dev \
+	libxml2-dev \
+	cargo 
 
-ENV MBED_GCC_ARM_PATH /usr/bin
+#Add testing repo from ALPINE
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+
+RUN apk add --no-cache binutils-arm-none-eabi \
+	gcc-arm-none-eabi \
+	avr-libc \
+	newlib-arm-none-eabi
+
+RUN pip install cython mbed-cli
+
+ENV GCC_ARM_PATH /usr/bin
 
 WORKDIR /mbed
 VOLUME /mbed
@@ -19,3 +30,4 @@ RUN cd /tmp && mbed new tmp0 && cd tmp0 && mbed compile >/dev/null 2>&1; cd .. &
     mbed config --global toolchain gcc_arm
 
 ENTRYPOINT [ "/usr/local/bin/mbed" ]
+
