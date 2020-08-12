@@ -8,7 +8,7 @@ A docker container based on   zoobab/stlink-docker  for the stlink utility, to f
 Start a sh inside the docker with usb devices and a volume to flash files.
 
 ```bash
-$ docker run -ti --privileged -v /dev/bus/usb:/dev/bus/usb -v $(pwd):/files:cached altefe4/docker-stlink-tools:0.2 sh
+$ docker run -ti --privileged -v /dev/bus/usb:/dev/bus/usb -v $(pwd):/mbed:cached altefe4/docker-stlink-tools:0.2 sh
 ```
 
 **Commands examples**
