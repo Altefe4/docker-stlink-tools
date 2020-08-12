@@ -1,58 +1,28 @@
-# docker-mbed-cli-gcc-arm
-A Docker image for running ARM mbed client and the GCC_ARM toolchain. Allows for identical mbed-cli use
-on Linux, Mac (using Docker for Mac) and Win (using Docker for Windows).
+# About
 
-This Dockerfile follows the [installation instructions of ARMs mbed-cli app](https://github.com/ARMmbed/mbed-cli/blob/master/README.md).
-It installs necessary components. Projects, source code and build artifacts need to be bind-mounted to `/mbed` (see alias below):
+A docker container based on   zoobab/stlink-docker  for the stlink utility, to flash STM32 and STM8 devices, with cheap chinese 2USD usb dongles labelled "st-link v2".
 
 
-## Build
+## Usage
+
+Start a sh inside the docker with usb devices and a volume to flash files.
 
 ```bash
-$ docker build -t mbed-cli .
-$ alias mbed='docker run -ti -v $(pwd):/mbed:cached mbed-cli'
+$ docker run -ti --privileged -v /dev/bus/usb:/dev/bus/usb -v $(pwd):/files:cached altefe4/docker-stlink-tools:0.2 sh
 ```
 
-## Use
+**Commands examples**
 
-Alias above starts mbed-cli as entrypoint:
+Inside the docker
 
+***FLASH_ST-LINK_LIN***
 ```bash
-$ mbed
-usage: mbed [-h] [--version]             ...
-
-Command-line code management tool for ARM mbed OS - http://www.mbed.com
-version 1.4.0
-(...)
+$ st-flash --reset write BUILD/NUCLEO_L433RC_P/GCC_ARM/{workspaceFolderBasename}.bin  0x8000000 && echo BUILD and FLASH DONE
 ```
 
-**New mbed project/program**
-
+***TERMINAL***
 ```bash
-$ mbed new --program demo
-[mbed] Creating new program "demo" (git)
-[mbed] Adding library "mbed-os" from "https://github.com/ARMmbed/mbed-os" at branch/tag "latest"
-(...)
-```
-
-creates a directory `demo`, cd there and:
-
-**Set target and toolchain**
-
-i.e. 
-```bash
-$ mbed target nucleo_f207zg
-[mbed] nucleo_f207zg now set as default target in program "mbed"
-$ mbed toolchain gcc_arm
-[mbed] gcc_arm now set as default toolchain in program "mbed"
-```
-
-**Compile**
-
-```bash
-$ mbed compile
-(...)
-Image: ./BUILD/nucleo_f207zg/gcc_arm/mbed.bin
+$ minicom -D /dev/ttyACM0  -b  115200
 ```
 
 ## Contribute
@@ -62,4 +32,3 @@ Feel free to fork, PRs welcome.
 ## License
 
 Apache 2. See LICENSE.
-
